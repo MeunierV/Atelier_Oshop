@@ -4,7 +4,26 @@ namespace App\Models;
 
 // Classe mère de tous les Models
 // On centralise ici toutes les propriétés et méthodes utiles pour TOUS les Models
-class CoreModel {
+
+// Une classe abstraite ne peux pas etre instanciée 
+// Elle sert juste de base a des classes enfant.
+// Dans une classe abstraite on va pouvoir indiquer 
+// les methodes que les enfants doivent implementer.
+// Si ils ne les implémente pas, ce ne sont pas ses enfants !
+
+
+
+abstract class CoreModel {
+
+    // je viens CONTRAINDRE tous les enfants de CoreModel
+    // a disposer OBLIGATOIREMENT des methodes suivantes : 
+    abstract static public function find($id);
+    abstract static public function findAll();
+    abstract public function insert();
+    abstract public function update();
+    abstract public function delete();
+
+
     /**
      * @var int
      */
@@ -24,7 +43,12 @@ class CoreModel {
      *
      * @return  int
      */ 
-    public function getId() : int
+    //! ATTENTION on a vu que la mention ": int"
+    // nous contraint le type de ce que va renvoyer 
+    // la methode getId, pour lui permettre de renvoyer 
+    // du null, je met juste un point d'interogation devant
+    // le int 
+    public function getId() : ?int
     {
         return $this->id;
     }
@@ -48,4 +72,21 @@ class CoreModel {
     {
         return $this->updated_at;
     }
+
+    // Cette nouvelle methode 
+    // me permet de ne plus m'embeter avec 
+    // $category->insert(); ou $category->update();
+    // désormais j'aurais juste a faire 
+    // $category->save();
+
+    public function save() {
+        if($this->id != null){
+            return $this->update();
+        } else{
+            return $this->insert();
+        }
+    }
+
+
+
 }

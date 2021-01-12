@@ -98,7 +98,8 @@ class Category extends CoreModel {
      * @param int $categoryId ID de la catégorie
      * @return Category
      */
-    public function find($categoryId)
+    //! attention a ne pas oublier le static
+    public static function find($categoryId)
     {
         // se connecter à la BDD
         $pdo = Database::getPDO();
@@ -220,70 +221,86 @@ class Category extends CoreModel {
         return false;
     }
 
-   
 
-    public function updateid()
+
+
+    public function update()
     {
-        // Récupération de l'objet PDO représentant la connexion à la DB
+        // on récupère un objet PDO
         $pdo = Database::getPDO();
 
-        // Ecriture de la requête INSERT INTO
-        /*
+        // on écrit la requete sql
         $sql = "
-            INSERT INTO `category` (name, subtitle, picture)
-            VALUES ('{$this->name}', '{$this->subtitle}', '{$this->picture}')
+            UPDATE `category`
+            SET
+                `name` = :name,
+                `subtitle` = :subtitle,
+                `picture` = :picture,
+                `updated_at` = NOW()
+            WHERE id = :id
         ";
+
+        // on prépare la requette
+        $query = $pdo->prepare($sql);
+        // on fait les bindValue
+        $query->bindValue(':name', $this->name, PDO::PARAM_STR);
+        $query->bindValue(':subtitle', $this->subtitle, PDO::PARAM_STR);
+        $query->bindValue(':picture', $this->picture, PDO::PARAM_STR);
+        $query->bindValue(':id', $this->id, PDO::PARAM_INT);
+       
+        // on execute
+        $query->execute();
+
+
+        // on return true si tout s'est bien passé ! 
+        // ici je me suis permis de compacter l'écriture
+        // SI la condition est vrai, on va return true
+        // Si la condition est fausse on va return false
+        return ($query->rowCount() > 0);
+        // équivaut a : 
+        /*
+        if($query->rowCount() > 0){
+            return true;
+        }else {
+            return false;
+        }
         */
 
-        $sql = "
-        UPDATE `category`
-        SET
-            name = ':name',
-            subtitle = ':subtitle',
-            picture = ':picture',
-        WHERE id = :id
-    ";
 
 
-            $query = $pdo->prepare($sql);
 
-            // On utilise la méthode bindValue pour chaque
-            //! token / jeton / placeholder
-            // Le 3eme argument permet de préciser le type de valeur
-            $query->bindValue(':name', $this->name, PDO::PARAM_STR);
-            $query->bindValue(':subtitle', $this->subtitle, PDO::PARAM_STR);
-            $query->bindValue(':picture', $this->picture, PDO::PARAM_STR);
-            // Puis executer la requete SQL préparée 
-            $query->execute();
-
-        // Préparation de la requëte d'insertion 
-        // beaucoup plus sécurisé que exec directement)
-        // https://www.php.net/manual/fr/pdo.prepared-statements.php
-
-        // Permet de lutter contre les injections SQL
-        // @see https://portswigger.net/web-security/sql-injection (exemples avec SELECT)
-        // @see https://stackoverflow.com/questions/681583/sql-injection-on-insert (exemples avec INSERT INTO)
-        
-
-        // Si au moins une ligne ajoutée
-        if ($query->rowCount() > 0) {
-            // Alors on récupère l'id auto-incrémenté généré par MySQL
-            $this->id = $pdo->lastInsertId();
-
-            // On retourne VRAI car l'ajout a parfaitement fonctionné
-            return true;
-            // => l'interpréteur PHP sort de cette fonction car on a retourné une donnée
-        }
-        
-        // Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
-        return false;
     }
 
-  
+
+
+    public function delete(){
+        $pdo = Database::getPDO();
+
+        $sql = "
+            DELETE FROM `category`
+            WHERE id = :id
+        ";
+
+        $query = $pdo->prepare($sql);
+
+        $query->bindValue(':id', $this->id, PDO::PARAM_INT);
+
+        $query->execute();
+
+        return ($query->rowCount() > 0);
 
 
 
 
-    
+    }
+
+
+
+
+
+
+
+
+
 
 }

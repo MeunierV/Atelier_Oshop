@@ -1,5 +1,6 @@
 <?php
 
+
 // désormais, nous utiliserons la commande : 
 // php -S 0.0.0.0:8080 -t public
 // pour notre serveur de dévelopement 
@@ -15,7 +16,6 @@ require_once '../vendor/autoload.php';
 /* ------------
 --- ROUTAGE ---
 -------------*/
-
 
 // création de l'objet router
 // Cet objet va gérer les routes pour nous, et surtout il va 
@@ -75,7 +75,6 @@ $router->map(
     'category-add'
 );
 
-//! ammorce atelier e02
 $router->map(
     'POST',
     '/category/add',
@@ -85,6 +84,44 @@ $router->map(
     ],
     'category-addpost'
 );
+
+//! première route fabriquée sur l'e03
+// nouvelle route correction e03
+// qui va nous permettre d'afficher le formulaire pré-rempli
+
+$router->map(
+    'GET',
+    '/category/update/[i:id]',
+    [
+        'method' => 'updatePage',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-updatepage'
+);
+
+// nouvelle route qui va nous permettre de recevoir/traiter les
+// infos du formulaire
+$router->map(
+    'POST',
+    '/category/update/[i:id]',
+    [
+        'method' => 'update',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-update'
+);
+
+//! bonus delete
+$router->map(
+    'GET',
+    '/category/delete/[i:id]',
+    [
+        'method' => 'delete',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-delete'
+);
+
 
 
 
@@ -118,33 +155,6 @@ $router->map(
     ],
     'product-addpost'
 );
-
-
-// Route pour l'affichage des pages UPDATES
-
-
-$router->map(
-    'GET',
-    '/category/update/[i:categoryId]', // Route pour récup l'id ! 
-    [
-        'method' => 'update',
-        'controller' => '\App\Controllers\CategoryController'
-    ],
-    'category-update'
-);
-
-
-// Route pour modifier et recuperer
-$router->map(
-    'POST',
-    '/category/update/[i:categoryId]', // Lien de l'URL + récupération de l'id dans l'url
-     [
-         'method' => 'updateid', // Methode du Controller
-         'controller' => '\App\Controllers\CategoryController' // Le Controller ciblé
-     ],
-     'category-updateid' // Nom de la route 
- );
-
 
 
 

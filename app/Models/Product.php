@@ -54,7 +54,7 @@ class Product extends CoreModel {
      * @param int $productId ID du produit
      * @return Product
      */
-    public function find($productId)
+    public static function find($productId)
     {
         // récupérer un objet PDO = connexion à la BDD
         $pdo = Database::getPDO();
@@ -190,6 +190,15 @@ class Product extends CoreModel {
         // Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
         return false;
     }
+
+    public function update(){
+
+    }
+
+    public function delete(){
+        
+    }
+
 
 
 

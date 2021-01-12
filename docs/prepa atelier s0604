@@ -1,0 +1,19 @@
+# Etapes
+
+- page de connexion => formulaire avec email et password, en POST
+- vérification user valide => récupération des données, table "app_user"
+- si OK, on conserve l'état "connecté" pour la suite
+=> stock l'objet User en session ($_SESSION['connectedUser'] par exemple)
+- sinon un message d'erreur => tableau d'erreur à transmettre a la View
+
+# Reformulation
+
+- créer une page (route + view) avec formulaire de connexion (champs mail + pass)
+- créer une route pour traiter la soumission du formulaire
+- si un utilisateur est trouvé, on compare son mot de passe avec celui tapé dans l'input password
+- on stoque l'état connecté dans la variable $_SESSION sinon on revient en arrière avec un message d'erreur
+
+
+
+
+
